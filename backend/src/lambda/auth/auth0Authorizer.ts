@@ -68,7 +68,7 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
 
     return verify(token, cert, { algorithms: ['RS256'] }) as JwtPayload
   } catch(err){
-    logger.error('Fail to authenticate', err)
+    logger.error('Failed to authenticate', err)
   }
 }
 

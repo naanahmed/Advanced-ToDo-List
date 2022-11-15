@@ -5,7 +5,7 @@ import {UpdateTodoRequest} from "../requests/UpdateTodoRequest";
 import {TodoUpdate} from "../models/TodoUpdate";
 import {ToDoAccess} from "./todosAccess";
 
-const uuidv4 = require('uuid/v4');
+const uuidv4 = require('uuid');
 const toDoAccess = new ToDoAccess();
 
 export async function getAllToDo(jwtToken: string): Promise<TodoItem[]> {

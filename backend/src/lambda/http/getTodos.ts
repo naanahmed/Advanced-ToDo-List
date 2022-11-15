@@ -4,7 +4,7 @@ import {APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler} fro
 import {getAllToDo} from "../../BusinessLogic/todos";
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    // TODO: Get all TODO items for a current user
+    // TODO: Get all
     console.log("Processing Event ", event);
     const authorization = event.headers.Authorization;
     const split = authorization.split(' ');

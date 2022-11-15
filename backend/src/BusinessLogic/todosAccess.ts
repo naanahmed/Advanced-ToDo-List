@@ -7,14 +7,15 @@ import { TodoUpdate } from "../models/TodoUpdate";
 
 export class ToDoAccess {
     constructor(
+        private readonly todoTable = process.env.TODOS_TABLE,
+        private readonly s3BucketName = process.env.S3_BUCKET_NAME,
         private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
         private readonly s3Client: Types = new AWS.S3({ signatureVersion: 'v4' }),
-        private readonly todoTable = process.env.TODOS_TABLE,
-        private readonly s3BucketName = process.env.S3_BUCKET_NAME) {
+        ) {
     }
 
     async getAllToDo(userId: string): Promise<TodoItem[]> {
-        console.log("Getting all todo");
+        console.log("Get all Todos");
 
         const params = {
             TableName: this.todoTable,
@@ -35,7 +36,7 @@ export class ToDoAccess {
     }
 
     async createToDo(todoItem: TodoItem): Promise<TodoItem> {
-        console.log("Creating new todo");
+        console.log("Create new Todo");
 
         const params = {
             TableName: this.todoTable,
@@ -49,7 +50,7 @@ export class ToDoAccess {
     }
 
     async updateToDo(todoUpdate: TodoUpdate, todoId: string, userId: string): Promise<TodoUpdate> {
-        console.log("Updating todo");
+        console.log("Update Todo");
 
         const params = {
             TableName: this.todoTable,
@@ -57,18 +58,18 @@ export class ToDoAccess {
                 "userId": userId,
                 "todoId": todoId
             },
-            UpdateExpression: "set #a = :a, #b = :b, #c = :c",
+            UpdateExpression: "set #name = :name, #due = :due, #done = :done",
             ExpressionAttributeNames: {
-                "#a": "name",
-                "#b": "dueDate",
-                "#c": "done"
+                "#name": "name",
+                "#due": "dueDate",
+                "#done": "done"
             },
             ExpressionAttributeValues: {
-                ":a": todoUpdate['name'],
-                ":b": todoUpdate['dueDate'],
-                ":c": todoUpdate['done']
+                ":name": todoUpdate['name'],
+                ":due": todoUpdate['dueDate'],
+                ":done": todoUpdate['done']
             },
-            ReturnValues: "ALL_NEW"
+            ReturnValues: "NEW"
         };
 
         const result = await this.docClient.update(params).promise();
@@ -79,7 +80,7 @@ export class ToDoAccess {
     }
 
     async deleteToDo(todoId: string, userId: string): Promise<string> {
-        console.log("Deleting todo");
+        console.log("Delete Todo");
 
         const params = {
             TableName: this.todoTable,
@@ -96,7 +97,7 @@ export class ToDoAccess {
     }
 
     async generateUploadUrl(todoId: string): Promise<string> {
-        console.log("Generating URL");
+        console.log("Generate URL");
 
         const url = this.s3Client.getSignedUrl('putObject', {
             Bucket: this.s3BucketName,

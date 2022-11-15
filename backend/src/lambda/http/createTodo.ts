@@ -5,7 +5,7 @@ import {CreateTodoRequest} from '../../requests/CreateTodoRequest';
 import {createToDo} from "../../BusinessLogic/todos";
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    // TODO: Implement creating a new TODO item
+    // TODO: Implement create
     console.log("Processing Event ", event);
     const authorization = event.headers.Authorization;
     const split = authorization.split(' ');

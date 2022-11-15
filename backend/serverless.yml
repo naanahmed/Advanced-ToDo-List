@@ -13,8 +13,8 @@ provider:
   runtime: nodejs12.x
   #lambdaHashingVersion: '20201221'
 
-  stage: ${opt:stage, 'dev'}
-  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'prod'}
+  region: ${opt:region, 'us-east-2'}
 
   tracing:
     lambda: true
