@@ -15,13 +15,13 @@ export const handler = async (
   event: CustomAuthorizerEvent
 ): Promise<CustomAuthorizerResult> => {
 
-  logger.info('Authorizing a user', event.authorizationToken)
+  logger.info('Authorize a user', event.authorizationToken)
 
   try {
 
     const jwtToken = await verifyToken(event.authorizationToken)
 
-    logger.info('User was authorized', jwtToken)
+    logger.info('User authorized', jwtToken)
 
     return {
       principalId: jwtToken.sub,
