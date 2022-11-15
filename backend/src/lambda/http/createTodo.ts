@@ -1,26 +1,30 @@
 import 'source-map-support/register'
-
-import {APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult} from 'aws-lambda'
+import * as middy from 'middy'
+import { cors } from 'middy/middlewares'
+import { getUserId } from '../utils';
+import {APIGatewayProxyEvent, APIGatewayProxyResult} from 'aws-lambda'
 import {CreateTodoRequest} from '../../requests/CreateTodoRequest';
-import {createToDo} from "../../BusinessLogic/todos";
+import {createTodo} from "../../BusinessLogic/todos";
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    // TODO: Implement create
-    console.log("Processing Event ", event);
-    const authorization = event.headers.Authorization;
-    const split = authorization.split(' ');
-    const jwtToken = split[1];
-
-    const newTodo: CreateTodoRequest = JSON.parse(event.body);
-    const toDoItem = await createToDo(newTodo, jwtToken);
-
-    return {
+export const handler = middy(
+    async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+      const newTodo: CreateTodoRequest = JSON.parse(event.body)
+      // TODO: Implement creating a new TODO item
+  
+      const createdItem = await createTodo(newTodo, getUserId(event))
+      
+      return {
         statusCode: 201,
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-            "item": toDoItem
-        }),
+        body:JSON.stringify({
+          'item': createdItem
+        })
+      }
+      
     }
-};
+  )
+  
+  handler.use(
+    cors({
+      credentials: true
+    })
+  )

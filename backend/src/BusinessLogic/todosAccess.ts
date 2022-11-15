@@ -14,7 +14,7 @@ export class ToDoAccess {
         ) {
     }
 
-    async getAllToDo(userId: string): Promise<TodoItem[]> {
+    async getTodosForUser(userId: string): Promise<TodoItem[]> {
         console.log("Get all Todos");
 
         const params = {
@@ -33,6 +33,21 @@ export class ToDoAccess {
         const items = result.Items;
 
         return items as TodoItem[];
+    }
+    async createAttachmentPresignedUrl(todoItem:TodoItem){
+        
+        const dbQuery = {
+            TableName: this.todoTable,
+            Key:{
+                todoId: todoItem.todoId,
+                userId: todoItem.userId
+            },
+            UpdateExpression: 'set attachmentUrl = :attachmentUrl',
+            ExpressionAttributeValues: {
+                ':attachmentUrl': todoItem.attachmentUrl
+            }
+        }
+        await this.docClient.update(dbQuery).promise()
     }
 
     async createToDo(todoItem: TodoItem): Promise<TodoItem> {
